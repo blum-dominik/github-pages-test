@@ -45,6 +45,7 @@
   const calendars = document.querySelectorAll("table");
   if (calendars.length > 0) {
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     calendars.forEach(function (table) {
       const eventRows = table.querySelectorAll("tbody tr[data-event-date]");
@@ -52,7 +53,7 @@
         return;
       }
 
-      let nextRow = null;
+      let nextRows = [];
       let nextTime = null;
 
       eventRows.forEach(function (row) {
@@ -64,15 +65,20 @@
           return;
         }
 
-        if (parsed >= now && (nextTime === null || parsed < nextTime)) {
-          nextTime = parsed;
-          nextRow = row;
+        const parsedDate = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+        if (parsedDate >= today) {
+          if (nextTime === null || parsedDate < nextTime) {
+            nextTime = parsedDate;
+            nextRows = [row];
+          } else if (parsedDate.getTime() === nextTime.getTime()) {
+            nextRows.push(row);
+          }
         }
       });
 
-      if (nextRow) {
-        nextRow.classList.add("next-event");
-      }
+      nextRows.forEach(function (row) {
+        row.classList.add("next-event");
+      });
     });
   }
 })();
