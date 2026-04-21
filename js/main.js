@@ -30,7 +30,7 @@
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0, rootMargin: "0px 0px 200px 0px" }
     );
 
     revealItems.forEach(function (el) {
